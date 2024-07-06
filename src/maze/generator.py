@@ -1,5 +1,6 @@
 import time
 from typing import override
+
 from src.graphics.window import (Cell, Window)
 
 class Maze():
@@ -50,3 +51,11 @@ class Maze():
     def __animate(self):
         self.__win.redraw()
         time.sleep(0.05)
+
+    def __break_entrance_and_exit(self):
+        entrance = self.__cells[0][0]
+        exit = self.__cells[-1][-1]
+
+        entrance.has_left_wall = False
+        exit.has_right_wall = False
+        

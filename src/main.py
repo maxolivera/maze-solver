@@ -1,8 +1,10 @@
-from maze.generator import Maze
-from graphics.window import (Window)
+from src.maze.generator import Maze
+from src.graphics.window import (Window)
 import logging
 import argparse
 
+LINE_COLOR = "black"
+BACKGROUND = "white"
 HEIGHT = 150
 WIDTH = 150
 
