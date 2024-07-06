@@ -11,3 +11,20 @@ class Tests(unittest.TestCase):
         self.assertTrue(
                 f"({num_rows}, {num_cols}) size" in str(maze)
         )
+
+    def test_entrance_and_exit(self):
+        maze = Maze(50, 50, 12, 10, 50, 50)
+        self.assertEqual(
+                False,
+                maze._cells[0][0].has_left_wall
+        )
+        self.assertEqual(
+                False,
+                maze._cells[-1][-1].has_right_wall
+        )
+
+    def test_visited_maze(self):
+        maze = Maze(50, 50, 12, 10, 50, 50)
+        for row in maze._cells:
+            for cell in row:
+                self.assertTrue(not cell.visited)

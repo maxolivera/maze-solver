@@ -1,8 +1,7 @@
 from typing import Self, override
 from tkinter import Tk, BOTH, Canvas
 import logging
-
-CELL_COLOR = "black"
+from src.graphics.colors import (BACKGROUND, LINE_COLOR, SOLVE_TRUE, SOLVE_FALSE)
 
 class Point():
     def __init__(self, x: float=0, y: float=0):
@@ -26,7 +25,7 @@ class Window():
         self.__active = False
         self.__root = Tk()
         self.__root.title("Maze Solver")
-        self.canvas = Canvas(self.__root, height=height, width=width)
+        self.canvas = Canvas(self.__root, height=height, width=width, background=BACKGROUND)
         self.canvas.pack(fill=BOTH, expand=1)
         self.__root.protocol("WM_DELETE_WINDOW", self.close)
 
@@ -49,12 +48,14 @@ class Window():
 class Cell():
     def __init__(self, x1: float, y1: float, x2: float, y2: float, win: Window|None=None,
                  left: bool=True, right: bool=True,
-                 top: bool=True, bottom: bool=True):
+                 top: bool=True, bottom: bool=True,
+                 visited: bool=False):
         self.__win = win
         self.__x1 = x1
         self.__y1 = y1
         self.__x2 = x2
         self.__y2 = y2
+        self.visited = visited
         self.has_left_wall = left
         self.has_right_wall = right
         self.has_top_wall = top
@@ -65,48 +66,47 @@ class Cell():
         return f"Cell at p1: ({self.__x1}, {self.__y1}), p2: ({self.__x2}, {self.__y2})"
 
     def draw(self):
+        if not self.__win:
+            return
         x1 = self.__x1
         x2 = self.__x2
         y1 = self.__y1
         y2 = self.__y2
-        if self.has_left_wall:
-            self.__win.draw_line(
-                    Line(
-                    Point(x1, y1),
-                    Point(x1, y2)
-                ),
-                    CELL_COLOR
-            )
-        if self.has_right_wall:
-            self.__win.draw_line(
-                    Line(
-                    Point(x2, y1),
-                    Point(x2, y2)
-                ),
-                    CELL_COLOR
-            )
-        if self.has_top_wall:
-            self.__win.draw_line(
-                    Line(
-                    Point(x1, y2),
-                    Point(x2, y2)
-                ),
-                    CELL_COLOR
-            )
-        if self.has_bottom_wall:
-            self.__win.draw_line(
-                    Line(
-                    Point(x1, y1),
-                    Point(x2, y1)
-                ),
-                    CELL_COLOR
-            )
+        # left_wall
+        self.__win.draw_line(
+                Line(
+                Point(x1, y1),
+                Point(x1, y2)
+            ),
+                LINE_COLOR if self.has_left_wall else BACKGROUND
+        )
+        self.__win.draw_line(
+                Line(
+                Point(x2, y1),
+                Point(x2, y2)
+            ),
+            LINE_COLOR if self.has_right_wall else BACKGROUND
+        )
+        self.__win.draw_line(
+                Line(
+                Point(x1, y2),
+                Point(x2, y2)
+            ),
+            LINE_COLOR if self.has_top_wall else BACKGROUND
+        )
+        self.__win.draw_line(
+                Line(
+                Point(x1, y1),
+                Point(x2, y1)
+            ),
+            LINE_COLOR if self.has_bottom_wall else BACKGROUND
+        )
 
     def draw_move(self, to_cell: Self, undo: bool=False):
         if not undo:
-            color = "red"
+            color = SOLVE_TRUE
         else:
-            color = "gray"
+            color = SOLVE_FALSE
 
         center_self = Point(
                 (self.__x1 + self.__x2) / 2,
