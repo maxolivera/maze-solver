@@ -1,1 +1,1 @@
-from . import maze
+from . import generator

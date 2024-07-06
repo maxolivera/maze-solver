@@ -47,9 +47,9 @@ class Window():
         line.draw(self.canvas, fill_color)
 
 class Cell():
-    def __init__(self, x1: float, y1: float, x2: float, y2: float, win: Window,
-                 left: bool=False, right: bool=False,
-                 top: bool=False, bottom: bool=False):
+    def __init__(self, x1: float, y1: float, x2: float, y2: float, win: Window|None=None,
+                 left: bool=True, right: bool=True,
+                 top: bool=True, bottom: bool=True):
         self.__win = win
         self.__x1 = x1
         self.__y1 = y1
@@ -65,35 +65,39 @@ class Cell():
         return f"Cell at p1: ({self.__x1}, {self.__y1}), p2: ({self.__x2}, {self.__y2})"
 
     def draw(self):
+        x1 = self.__x1
+        x2 = self.__x2
+        y1 = self.__y1
+        y2 = self.__y2
         if self.has_left_wall:
             self.__win.draw_line(
                     Line(
-                    Point(self.__x1, self.__y1),
-                    Point(self.__x1, self.__y2)
+                    Point(x1, y1),
+                    Point(x1, y2)
                 ),
                     CELL_COLOR
             )
         if self.has_right_wall:
             self.__win.draw_line(
                     Line(
-                    Point(self.__x2, self.__y1),
-                    Point(self.__x2, self.__y2)
+                    Point(x2, y1),
+                    Point(x2, y2)
                 ),
                     CELL_COLOR
             )
         if self.has_top_wall:
             self.__win.draw_line(
                     Line(
-                    Point(self.__x1, self.__y2),
-                    Point(self.__x2, self.__y2)
+                    Point(x1, y2),
+                    Point(x2, y2)
                 ),
                     CELL_COLOR
             )
         if self.has_bottom_wall:
             self.__win.draw_line(
                     Line(
-                    Point(self.__x1, self.__y1),
-                    Point(self.__x2, self.__y1)
+                    Point(x1, y1),
+                    Point(x2, y1)
                 ),
                     CELL_COLOR
             )

@@ -1,16 +1,17 @@
 import time
-from graphics.window import (Cell, Window)
+from typing import override
+from src.graphics.window import (Cell, Window)
 
 class Maze():
     def __init__(
             self,
             x1: float,
             y1: float,
-            num_rows: float,
-            num_cols: float,
+            num_rows: int,
+            num_cols: int,
             cell_width: float,
             cell_height: float,
-            win: Window
+            win: Window|None=None
             ) -> None:
         self.__x1 = x1
         self.__y1 = y1
@@ -19,6 +20,10 @@ class Maze():
         self.__win = win
         self.__cells: list[list[Cell]] = []
         self.__create_cells()
+
+    @override
+    def __repr__(self) -> str:
+        return f"Maze starts at ({self.__x1}, {self.__y1}) with {self.__size} size."
 
     def __create_cells(self) -> None:
         height, width = self.__size
@@ -29,12 +34,12 @@ class Maze():
                             self.__y1 + (i * self.__cell[1]),
                             self.__x1 + ((j + 1) * self.__cell[0]),
                             self.__y1 + ((i + 1) * self.__cell[1]),
-                            self.__win,
-                            True, True, True, True)
+                            self.__win)
                 row.append(cell)
             self.__cells.append(row)
 
-        self.__draw_cells()
+        if self.__win:
+            self.__draw_cells()
 
     def __draw_cells(self):
         for row in self.__cells:

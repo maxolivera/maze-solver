@@ -1,4 +1,4 @@
-from maze.maze import Maze
+from maze.generator import Maze
 from graphics.window import (Window)
 import logging
 import argparse
